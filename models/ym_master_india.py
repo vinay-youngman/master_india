@@ -43,4 +43,5 @@ class YmMasterIndia(models.TransientModel):
         if data['results']['code'] == 200:
             return data['results']['distance']
         else:
-            raise Exception("Could not fetch distance: " + data['results']['message'])
+            return 0
+            #raise Exception("Could not fetch distance: " + data['results']['message'])

@@ -32,8 +32,8 @@ class YmMasterIndia(models.TransientModel):
 
         cast_to_int = lambda string: int(string) if string.strip() else False
 
-        from_pincode = cast_to_int(from_pincode)
-        to_pincode = cast_to_int(to_pincode)
+        from_pincode = cast_to_int(str(from_pincode))
+        to_pincode = cast_to_int(str(to_pincode))
 
         access_token = self.get_master_india_access_token()
         url = f"https://pro.mastersindia.co/distance?access_token={access_token}&fromPincode={from_pincode}&toPincode={to_pincode}"

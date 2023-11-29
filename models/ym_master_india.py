@@ -1,4 +1,5 @@
 from odoo import models,_
+from odoo.exceptions import ValidationError
 
 import logging, requests
 import json
@@ -35,6 +36,9 @@ class YmMasterIndia(models.TransientModel):
         from_pincode = cast_to_int(str(from_pincode))
         to_pincode = cast_to_int(str(to_pincode))
 
+        if from_pincode == to_pincode:
+            return 0
+
         access_token = self.get_master_india_access_token()
         url = f"https://pro.mastersindia.co/distance?access_token={access_token}&fromPincode={from_pincode}&toPincode={to_pincode}"
         response = requests.request("GET", url)
@@ -43,5 +47,7 @@ class YmMasterIndia(models.TransientModel):
         if data['results']['code'] == 200:
             return data['results']['distance']
         else:
-            return 0
-            #raise Exception("Could not fetch distance: " + data['results']['message'])
+            try:
+                raise Exception("Could not fetch distance: " + data['results']['message'])
+            except Exception as e:
+                raise ValidationError("Odoo validation error: {}".format(e))
